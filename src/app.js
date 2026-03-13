@@ -1,6 +1,8 @@
 // Importacion de dependencias
 import express from 'express';
 import cors from 'cors';
+import helmet from "helmet";
+
 
 // Creando el app express.
 const app = express();
@@ -13,6 +15,7 @@ import errorHandler from './middleware/errorHandler.js';
    Middlewares
 ============================== */
 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 

@@ -52,6 +52,10 @@ export const paymentWebhook = async (req, res) => {
 
     try {
 
+        if( req.query.type !== 'payment' ) {
+            res.sendStatus(200);
+        };
+
         const paymentId = req.query["data.id"];
 
         if (!paymentId) {

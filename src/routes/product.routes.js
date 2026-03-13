@@ -9,6 +9,8 @@ import {
   updateProduct,
   deleteProduct
 } from "../controllers/product.controller.js";
+import validateRequest from '../validators/validate.request.js';
+import { validateProduct } from '../middleware/productValidator.js';
 
 // Crear router
 const router = express.Router();
@@ -17,7 +19,12 @@ const router = express.Router();
 // CRUD de productos
 
 // Obtener todos los productos
-router.get("/", getProducts);
+router.get(
+  "/",
+  validateProduct,
+  validateRequest,
+  getProducts
+);
 
 // Obtener un producto por ID
 router.get("/:id", getProductById);
