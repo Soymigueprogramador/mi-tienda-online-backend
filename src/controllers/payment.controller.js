@@ -1,5 +1,8 @@
 // Importacion de archivos necesarios
 import mercadopago from '../config/mercadopago.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Importacion de archivos necesarios
 import Order from '../models/Order.models.js'
@@ -28,7 +31,7 @@ export const createPreference = async (req, res) => {
                 orderId: orderId
             },
 
-            notification_url: "" // Despues se le agrega el link
+            notification_url: `${process.env.BACKEND_URL}/api/payments/webhook`
         };
 
         // Mostramos la respuesta de la iteracion
