@@ -10,6 +10,7 @@ import productRouter from './routes/product.routes.js';
 import orderRoutes from './routes/order.routes.js';
 //import paymentRoutes from './routes/payment.routes.js';
 import errorHandler from './middleware/errorHandler.js';
+import authRoutes from './routes/auth.routes.js';
 
 /* ==============================
    Middlewares
@@ -41,5 +42,6 @@ app.use(errorHandler);
 app.use('/api/products', productRouter);
 app.use("/api/orders", orderRoutes);
 //app.use("/api/payments", paymentRoutes);
+app.use("/api/auth", authRoutes);
 
 export default app;

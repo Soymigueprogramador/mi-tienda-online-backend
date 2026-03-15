@@ -4,6 +4,13 @@ import mongoose from "mongoose";
 // Creando el esquema
 const orderSchema = new mongoose.Schema(
   {
+    // Usuario que realizó la orden
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+
     items: [
       {
         productId: {
