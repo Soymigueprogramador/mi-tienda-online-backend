@@ -6,43 +6,44 @@ import jwr from 'jsonwebtoken';
 import User from '../models/User.js';
 
 // Funcion para crear el registro del usuario
-export const registerUser = async ( req, res ) => {
+export const registerUser = async (req, res) => {
     try {
-        // Decestructuracion de lo que va a recibir del frontend
+
         const { name, email, password } = req.body;
 
-        // Si el usuariio intenta registrarse por segunda vez mostramos este mensaje
-        if( userExists ) {
+        // 🔧 BUSCAR USUARIO EXISTENTE
+        const userExists = await User.findOne({ email });
+
+        if (userExists) {
             return res.status(400).json({
-                message: 'El usuario ya esta registrado, ahora tenes que iniciar sesion'
+                message: 'El usuario ya está registrado, ahora tenés que iniciar sesión'
             });
-        };
+        }
 
-        // Indicamos la cantidad de caracteres que va a tener el password
-        const hashedPassword = await bcrypt.hash( password, 10 );
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Creamos el usuario con los datos necesarios
-        const user = await User.create({
+        await User.create({
             name,
             email,
             password: hashedPassword
         });
 
-        // Mostramos este mensaje cuando el nuevo usuario es creado
         res.status(201).json({
-            message: 'Usuario creado con exito'
+            message: 'Usuario creado con éxito'
         });
 
     } catch (error) {
-        // Si ocurre un error mostramos este mensaje
+
+        console.error(error); // 👈 IMPORTANTE
+
         res.status(500).json({
-            message: ' Error al crear el registro del usuario '
+            message: 'Error al crear el registro del usuario'
         });
     }
 };
 
 // Funcion para crear el login
-export const loginUser = async ( req, res ) => {
+export const loginUser = async (req, res) => {
     try {
         // Datos necesarios para el login
         const { email, password } = req.body;
@@ -51,17 +52,17 @@ export const loginUser = async ( req, res ) => {
         const user = await User.findOne({ email });
 
         // Si el usuario ingresa datos incorrectos le mostramos este mensaje
-        if( !user ) {
+        if (!user) {
             return res.status(204).json({
                 message: 'Email o password incorrecto'
             });
         };
 
         // Comparamos que las credenciales sean las correctas
-        const isMatch = await bcrypt.compare( password, user.password );
+        const isMatch = await bcrypt.compare(password, user.password);
 
         // Si el usuario ingresa datos incorrectos le mostramos este mensaje
-        if( !isMatch ) {
+        if (!isMatch) {
             return res.status(204).json({
                 message: 'Email o password incorrecto'
             });
@@ -69,16 +70,16 @@ export const loginUser = async ( req, res ) => {
 
         // Validaciones
         const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
 
-    res.json({
-      token
-    });
+        res.json({
+            token
+        });
 
-    } catch ( error ) {
+    } catch (error) {
         res.status(500).json({
             message: 'Error con el login'
         });
